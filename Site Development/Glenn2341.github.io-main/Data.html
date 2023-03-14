@@ -1,0 +1,120 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Generic Page - Massively by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Glenn Findlay</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Programming Projects</a></li>
+							<li class="active"><a href="Data.html">Data Essays</a></li>
+							<li><a href="generic.html">Other Skills</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="#" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/Glenn2341/GlennFindlay" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h3>Feedback Analysis and Summarization for a Computer Game.</h3>
+								</header>
+								<div class="image main large"><img src="images/Adventure.jpg" alt="" /></div>
+								<p><span class = "tab"></span>The popular online game ‘New World’ released in September of 2021, and in the game’s first month alone the main subreddit associated with the game saw a total of 28,480 posts and a whopping 386,767 comments.</p>
+								<p><span class = "tab"></span>While developers of large-scale software products may stuggle to keep abreast of such a voluminous amount of feedback, machine-learning techniques hold great potential for facilitating the work of assisting anyone interested in analyzing, summarizing and understanding user experiences.</p>
+								<p><span class = "tab"></span>Players of New World frequently visit the subreddit r/newworldgame to share their opinions on the state of the game and their hopes as to what features the developers may implement in the future. Player have discussed bugs, fishing, battling monsters, furnishing their in-game homes, and the game's taxation systems, among many other topics.</p>
+								<p><span class = "tab"></span>I’ll start my analysis with with basic questions; what are players talking about and how are they feeling about the different activities within the game? For analyzing user sentiment I chose to use Textblob, a popular Python NLP library. Textblob is easy to use and interpret and can quickly gauge sentiment for large numbers of comments.</p>
+
+								<div class="image main large"><img src="images/TB_Scoring.png" alt="" /></div>
+								<p><span class = "tab"></span>When tested against 64 postive comments and 64 negative comments taken from r/newworldgame, Textblob assigned positive comments with a score greater than zero 57/64 = 89% of the time, while negative comments received a score lower than zero 39/64 = 61% of the time.</p>
+								<p><span class = "tab"></span>When tested against a mixed set of 64 positive and 64 negative comments, textblob produced an overall score of .0533; when 32 of these negative comments were removed the score rose to .116.</p>
+								<p><span class = "tab"></span>Clearly Textblob will not do a particularly good job of diagnosing whether an individual comment is positive or negative. However, we can still use it to gauge the overall positivity of a larger set of comments in order to get an overall ‘temperature reading’ on how users are feeling at a given time or how they are feeling about a particular topic.</p>
+
+								<div><img src="images/OpenAI_Comment_Scoring.png" alt="" style="width: 983px; height: 985px;"/></div>
+								<p><span class = "tab"></span>While Textblob was able to correctly classify 98 / 128 user comments, OpenAI’s DaVinci engine was able to score 125/128 with a total of 3 false positives. While significantly more performant than Textblob, DaVinci was repeatedly fooled by sarcastic and ironic comments that adopted a adopted a positive-veneer tone. For example, the comment “Yeah all 7 enemy models look great, and the copy/pasted towns with slightly rotated buildings look really good.” was graded as “Positive (Comment is praising the enemy models and copy/pasted towns.)”</p>
+								<p><span class = "tab"></span>Because the GPT-API is rate-limited and paid-use, it will not be my main tool for analyzing sentiment. However it will come in handy later on when accurate analysis is required on smaller subsets of data.</p>
+
+								<p><span class = "tab"></span>Reddit’s official API does not provide functionality for posts to be requested based on a historical timeframe (say, all posts made to a subreddit during January 2021.) Fortunately, Pushshift.io collects this data from Reddit and and has an API capable of fulfilling such requests. Once the post IDs have been collected, the comments can then be retrieved separately either from Pushshift’s API or from the official Reddit API.</p>
+
+								<div class="image main large"><img src="images/Launch_Traffic_And_Players.png" alt="" style="width: 774px; height: 372px;"/></div>
+								<p><span class = "tab"></span>New World’s fabled land of Aeternum enticed millions of players with stunning visuals and beautiful landscapes replete with rolling forests and mysterious ancient ruins. Unfortunately, they stepped into a world plauged with repetitive gameplay, bugs, and other issues on which I’ll get into more detail later. The above chart shows a sharp drop in player-count and subreddit activity shortly after launch.</p>
+
+								<div class="image main large" style="display: flex; justify-content: center; align-items: center;">
+									<img src="images/Launch_Sentiment_and_Traffic.png" alt="" style="width: 774px; height: 372px; margin: auto;" />
+								  </div>
+								<p><span class = "tab"></span>While r/newworldgame represents just a part of the game’s playerbase, activity on the subreddit closely tracks with the game’s performance as a whole. When activity in the game increases, so does subreddit traffic – and when players in the game are upset and therefore quitting, sentiment on the subreddit will be likewise gloomy.</p>
+
+								<div class="image main large" style="display: flex; justify-content: center; align-items: center;">
+									<img src="images/2022_Traffic_and_Players.png" alt="" style="width: 774px; height: 372px; margin: auto;" />
+								  </div>
+								<p><span class = "tab"></span>Historically, in-game playercount has had a remarkably strong 80% Pearson correlation with subreddit activity since launch.</p>
+
+								<header class="major">
+									<h3>To be continued...</h3>
+								</header>
+								<p><span class = "tab"></span>We have already uncovered some interesting historical trends, but we need to know more. Just what did people get so upset about at launch? Were major game issues not discussed or discovered until after launch, or were they already known to some players during the game’s beta period? What topics are players concerned about right now? In the next part of this data essay, I will begin delving much deeper into the data in order to understand what topics players care about the most and what exactly they are saying. </p>
+
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<section class="split contact">
+						<section>
+							<h3>Email</h3>
+							<p>glennfindlay@gmail.com</p>
+						</section>
+						<section>
+							<h3>Other</h3>
+							<ul class="icons alt">
+								<li><a href="#" target="_blank" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="#" target="_blank" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+						</section>
+					</section>
+				</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; 2022 Glenn Findlay</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
