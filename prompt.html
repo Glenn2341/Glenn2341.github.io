@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Prompt Engineering</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="index.html" class="logo">Glenn Findlay</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="index.html">Programming Projects</a></li>
+							<li><a href="Data.html">Data Essays</a></li>
+							<!-- <li><a href="generic.html">Other Skills</a></li> -->
+							<li class="active"><a href="generic.html">Prompt Engineering</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="#" target="_blank" class="icon brands fa-linkedin"><span class="label">LinkedIn</span></a></li>
+							<li><a href="https://github.com/Glenn2341/GlennFindlay" target="_blank" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<section class="post featured">
+								<header class="major">
+									<h3>GUPTA</h3>
+									<p>Generative Unsupervised Pre-Trained Administrator<br><a href="https://lablogueuse.net/index">https://lablogueuse.net/index</a></br></p>
+								</header>
+								<div class="image main large"><img src="images/gemini.png" alt="" /></div>
+							
+								<p><span class = "tab"></span>Gupta is a collection of scripts that run on the server to generate new posts and query a stable diffusion API for accompanying on-topic images. Gupta also generates new comments and deletes your comments if it considers them to be toxic or spam.</p>
+								
+								<header class="minor">
+									<h4>Post Generation</h3>
+								</header>
+								<p><span class = "tab"></span>New posts are genered via queries to the Chat-GPT API. The site data is seeded with 7 base contributors that will take the role of different personas that articles will be written for. Every post-generation prompt picks a contributor at random and adds the titles of their articles to the final prompt. The final prompt will be some variant of this: </p>
+									<p><span class = "tab"></span><i>The Intriguing World of Gemini: Celestial Twins and Legendary Geminis by Ana Astra</i>
+									<br><span class = "tab"></span><i>The Enigmatic World of Cancer: Celestial Crabs and Legendary Cancers by Ana Astra</i>
+									<br><span class = "tab"></span><i>Moonbathing: Basing in the Lunar Glow by Ana Astra</i>
+									<br><span class = "tab"></span><i>Please pretend you are Ana Astra and write their next blog post (start with a title and then write the post)</i></p>							
+								<p><span class = "tab"></span>This is a fairly straightforward prompt but works with a high degree of reliability. Specifying that the model should ‘pretend to be’ Ana Astra ensures it understands the task of authorship and won’t return results like ‘as an AI language model, I can’t know what Ana’s next post will be.’ ‘Start with a title’ sounds open to interpretation, but the model consistently understands it to mean that a title should be delivered at the start of the output and then the article itself should follow after a series of line breaks, making the final output easy to predict and parse.</p>
+											
+								<header class="minor">
+									<h4>Comment Generation</h3>
+								</header>
+								<p><span class = "tab"></span>Here’s the line where the comment query is specified:</p>
+								<p><span class = "tab"></span><i>comment_query_base = 'Given this post, please write one comment (output like username:comment) \n' + post.content</i></p>
+								<p><span class = "tab"></span>The model consistently understands this prompt to mean it should generate output like:</p>
+								<p><span class = "tab"></span><i>stargazer22:What a great article! I never knew the origin story of Gemini as so interesting!</i></p>				
+								<p><span class = "tab"></span>Output in this form is easy to parse. The one complication is that repeated calls of this prompt will generate near-identical comments, sometimes even with the same username. This can be avoided by simply appending the previous comment into the prompt, ensuring that the input - and thus the output - varies in each generation.</p>
+
+								<header class="minor">
+									<h4>Comment Moderation</h3>
+								</header>
+								<p><span class = "tab"></span>Here’s the line of code used to formulate the API query that diagnoses toxic comments. </p>
+								<p><span class = "tab"></span><i>moderation_query = 'Please diagnose this post as toxic, spam, or acceptable (output like acceptable:reason) + comment.content</i></p>
+								<p><span class = "tab"></span>Comments that are classified as spam or toxic are deleted from the database. I tested this prompt with a mix of a dozen acceptable and a dozen unacceptable comments and it worked for every one. Asking for reasoning provided useful a window into the model’s interpretation of comments during development.</p>
+								
+								<header class="minor">
+									<h4>Image Generation</h3>
+								</header>						
+								<p><span class = "tab"></span>Once the article was created, the title of the article was then used to prompt a matching on-topic image from a Stable Diffusion 2.1 API. These prompts required the most time to develop. At first I tried to prompt the image generation using only the title of the article. This generally resulted in bland, low quality output images that varied wildly across genre and composition. I finally decided on the following format:</p>
+								<p><span class = "tab"></span><i>crisp clear air, nostalgic, detailed, high detail, winter landscape, (Title: The Incredible Powers of Astral Projection: Unlocking the Secrets of the Universe)</i></p>
+								<p><span class = "tab"></span>This prompt is divided into 2 sections, an ‘anchor’ and the title of the article itself. In this way, I can base my image requests on anchors that are known to produce quality images that conform to a consistent art style. Specifying that the article’s name is the title of the artwork clarifies to the model which part of the prompt refers to the style of the artwork and which part refers to the subject matter. The prompt above is just one of several anchors used. Each time an image is queried an anchor will be randomly selected, in order to ensure a certain level of visual diversity in the final output.</p>
+								<p><span class = "tab"></span>Most of the anchors used specify ‘winter’ or ‘cold’ in order to increase the likelihood that characters will be drawn wearing gloves or mittens. These articles of clothing conform to a simpler visual geometry that Stable Diffusion can more consistently and correctly depict than the hands themselves; in any case, a misshapen glove is far less noticable than a mutated hand. Inserting ‘gloves’ into the prompt explictly backfired by causing the model to try and insert hands into images where they would otherwise not appear or be out of frame.</p>
+
+							</section>
+
+					</div>
+
+				<!-- Footer -->
+				<footer id="footer">
+					<section class="split contact">
+						<section>
+							<h3>Email</h3>
+							<p>glennfindlay@gmail.com</p>
+						</section>
+						<section>
+							<h3>Other</h3>
+							<ul class="icons alt">
+								<li><a href="#" target="_blank" class="icon brands alt fa-linkedin"><span class="label">LinkedIn</span></a></li>
+								<li><a href="#" target="_blank" class="icon brands alt fa-github"><span class="label">GitHub</span></a></li>
+							</ul>
+						</section>
+					</section>
+				</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; 2022 Glenn Findlay</li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
